@@ -4,9 +4,11 @@
 
 'use client';
 
-import React, { useMemo, useRef } from "react";
+import React from "react";
+import { ElementType } from "react";
 import { Icon as Iconify } from "@iconify/react";
 import Image from "next/image";
+
 // -----------------------------
 // Inline SVG Icons (no external deps)
 // -----------------------------
@@ -61,15 +63,24 @@ const SectionTitle: React.FC<{ title: string; subtitle?: string }> = ({ title, s
   </div>
 );
 
-const NeonButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { as?: "a"; href?: string }>
-  = ({ as, href, className, children, ...props }) => {
-  const Tag: any = as || "button";
-  const base = "relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-transform duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#48B7FF] focus-visible:ring-offset-transparent";
+type NeonButtonProps =
+  | (React.ButtonHTMLAttributes<HTMLButtonElement> & { as?: "button" })
+  | (React.AnchorHTMLAttributes<HTMLAnchorElement> & { as: "a"; href: string });
+
+const NeonButton: React.FC<NeonButtonProps> = ({ as = "button", className, children, ...props }) => {
+  const Tag = as === "a" ? "a" : "button";
+
+  const base =
+    "relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-transform duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#48B7FF] focus-visible:ring-offset-transparent";
+
   return (
     <Tag
-      href={href}
-      className={cn(base, "bg-[#101826] border border-[#1E2633] text-[#E9EDF7] hover:scale-[1.02]", className)}
-      {...props}
+      className={cn(
+        base,
+        "bg-[#101826] border border-[#1E2633] text-[#E9EDF7] hover:scale-[1.02]",
+        className
+      )}
+      {...(props as any)}
     >
       {children}
       <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
@@ -78,6 +89,8 @@ const NeonButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { as?
     </Tag>
   );
 };
+
+
 
 // Card tilt effect
 function useTilt() {
@@ -216,8 +229,12 @@ const Nav: React.FC = () => (
         <a href={LINKS.linkedin} className="p-2 rounded-lg border border-[#1E2633] text-[#B9C4D6] hover:text-[#E9EDF7] hover:border-[#2A3A52] transition" aria-label="LinkedIn">
           <Icon.Linkedin className="w-5 h-5" />
         </a>
-        <a href={LINKS.resume} className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-[#1E2633] bg-[#101826] px-3 py-2 text-sm text-[#E9EDF7] hover:scale-[1.02] transition">
-          <Icon.File className="w-4 h-4" /> Resume
+        <a
+          href="#"
+          className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-[#1E2633] bg-[#101826] px-3 py-2 text-sm text-[#7D8AA3] cursor-not-allowed"
+          onClick={(e) => e.preventDefault()}
+        >
+        <Icon.File className="w-4 h-4" /> Resume (soon)
         </a>
       </div>
     </div>
@@ -251,8 +268,12 @@ const Hero: React.FC = () => (
             Building scalable software & data systems — backend APIs, ML pipelines, and real-time analytics.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <a href={LINKS.resume} className="group inline-flex items-center gap-2 rounded-xl border border-[#1E2633] bg-[#101826] px-4 py-2 text-sm font-medium text-[#E9EDF7] hover:scale-[1.02] transition">
-              <Icon.File className="w-4 h-4" /> View Resume <Icon.ArrowRight className="w-4 h-4 opacity-70"/>
+            <a
+              href="#"
+              className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-[#1E2633] bg-[#101826] px-3 py-2 text-sm text-[#7D8AA3] cursor-not-allowed"
+              onClick={(e) => e.preventDefault()}
+            >
+            <Icon.File className="w-4 h-4" /> Resume (soon)
             </a>
             <a href={LINKS.github} className="inline-flex items-center gap-2 rounded-xl border border-[#1E2633] px-4 py-2 text-sm text-[#E9EDF7] hover:scale-[1.02] transition">
               <Icon.Github className="w-4 h-4"/> GitHub
